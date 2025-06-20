@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Verjaardagsuitnodiging voor Angela</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Georgia', serif;
+      background: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1280&q=80') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    .uitnodiging {
+      background-color: rgba(255, 255, 255, 0.95);
+      padding: 30px 20px;
+      max-width: 90%;
+      width: 700px;
+      border-radius: 20px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      color: #4d2c3d;
+      z-index: 10;
+      position: relative;
+    }
+
+    h1 {
+      color: #d6336c;
+      font-size: 2em;
+      margin-bottom: 0.5em;
+    }
+
+    h2 {
+      color: #b03a2e;
+      margin-bottom: 1em;
+    }
+
+    p {
+      font-size: 1.1em;
+      line-height: 1.6;
+      margin-bottom: 1em;
+    }
+
+    strong {
+      color: #b22222;
+    }
+
+    .rsvp-btn {
+      background-color: #d6336c;
+      color: white;
+      font-size: 1.2em;
+      padding: 15px 30px;
+      border: none;
+      border-radius: 40px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      box-shadow: 0 4px 10px rgba(214, 51, 108, 0.6);
+      margin-top: 20px;
+      user-select: none;
+    }
+
+    .rsvp-btn:hover {
+      background-color: #b22222;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 1.5em;
+      }
+      p {
+        font-size: 1em;
+      }
+      .rsvp-btn {
+        font-size: 1em;
+        padding: 12px 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="uitnodiging">
+    <h1>🎉 Lieve Angela, gefeliciteerd! 🎉</h1>
+    <h2>Je bent jarig én uitgenodigd voor iets bijzonders!</h2>
+    <p>Je verdient het allerbeste. Daarom mag jij kiezen waar, wanneer én hoe je een bijzondere overnachting wilt beleven.</p>
+    <p>Ga je voor het sprookjesachtige <strong>Kasteel Oost</strong> in Valkenburg? Laat je betoveren door de romantiek, de rust en de historische charme.</p>
+    <p>Heb je Valkenburg wel gezien, kies dan voor ontspanning in Thermaalbad Arcen met een heerlijke overnachting in Parkhotel Bad Arcen. Liever thuis slapen en alleen genieten van het thermaalbad en een heerlijke wellness-behandeling? Ook dat is een prachtige optie.</p>
+    <p>Of natuurlijk… lekker uitwaaien op het strand, wokken bij Oriental en een gokje wagen bij Flamingo Casino. Hotelovernachting erbij? Geen probleem. Het is jouw dag, dus jij bepaalt!</p>
+    <p><strong>Kies jouw perfecte verjaardagservaring en laat je verwennen zoals je verdient! 💖</strong></p>
+
+    <button class="rsvp-btn" onclick="rsvp()">JA IK WIL!</button>
+  </div>
+
+  <!-- Confetti canvas -->
+  <canvas id="confetti-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;"></canvas>
+
+  <script>
+    // RSVP button action
+    function rsvp() {
+      alert("Bedankt voor je keuze! Alles wordt nu in gang gezet!");
+    }
+
+    // Confetti effect
+    (function() {
+      const canvas = document.getElementById('confetti-canvas');
+      const ctx = canvas.getContext('2d');
+      let W, H;
+
+      function resize() {
+        W = window.innerWidth;
+        H = window.innerHeight;
+        canvas.width = W;
+        canvas.height = H;
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      const confettiCount = 150;
+      const confetti = [];
+
+      const colors = [
+        '#d6336c', '#ff6384', '#b22222', '#ff99aa', '#ee6c4d', '#f4a261', '#e76f51'
+      ];
+
+      function randomRange(min, max) {
+        return Math.random() * (max - min) + min;
+      }
+
+      function Confetto() {
+        this.x = Math.random() * W;
+        this.y = Math.random() * H - H;
+        this.w = randomRange(7, 12);
+        this.h = randomRange(12, 18);
+        this.color = colors[Math.floor(Math.random() * colors.length)];
+        this.speed = randomRange(2, 5);
+        this.tilt = randomRange(-10, 10);
+        this.tiltSpeed = randomRange(0.05, 0.12);
+        this.angle = 0;
+      }
+
+      Confetto.prototype.update = function() {
+        this.y += this.speed;
+        this.angle += this.tiltSpeed;
+        this.tilt = Math.sin(this.angle) * 10;
+
+        if (this.y > H) {
+          this.x = Math.random() * W;
+          this.y = -20;
+          this.speed = randomRange(2, 5);
+        }
+      }
+
+      Confetto.prototype.draw = function() {
+        ctx.beginPath();
+        ctx.lineWidth = this.h / 3;
+        ctx.strokeStyle = this.color;
+        ctx.moveTo(this.x + this.tilt + this.w / 2, this.y);
+        ctx.lineTo(this.x + this.tilt, this.y + this.tilt + this.h / 2);
+        ctx.stroke();
+      }
+
+      function initConfetti() {
+        for (let i = 0; i < confettiCount; i++) {
+          confetti.push(new Confetto());
+        }
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, W, H);
+        for (let i = 0; i < confetti.length; i++) {
+          confetti[i].update();
+          confetti[i].draw();
+        }
+        requestAnimationFrame(animate);
+      }
+
+      initConfetti();
+      animate();
+    })();
+  </script>
+</body>
+</html>
